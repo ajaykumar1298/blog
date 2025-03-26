@@ -1,14 +1,24 @@
-import { useState } from 'react'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import { useDispatch } from "react-redux";
+import auth from "./appwrite/auth";
+import { login, logout } from "./store/authSlice";
 
 function App() {
-  const [count, setCount] = useState(0)
+  let [loader, setLoader] = useState(true);
+  let dispatch = useDispatch();
 
-  return (
-   <>
-   hello world
-   </>
-  )
+  useEffect(() => {
+    auth.getCurrentUser().then((userData) => {
+      if (userData) {
+        dispatch(login(userData));
+      } else {
+        dispatch(logout());
+      }
+    });
+  }, []);
+
+  return <>hello world</>;
 }
 
-export default App
+export default App;
